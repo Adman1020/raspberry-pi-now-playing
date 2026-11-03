@@ -24,8 +24,37 @@ by cloning upstream into `/var/www/html` and deleting `.git`; it has since been 
 1. Apache serves `/var/www/html` (this repo's `index.php`, `style.min.css`, `artwork-placeholder.png`).
 2. `index.php` polls the Last.fm API (`LASTFM_API_KEY`, `LASTFM_USER`) for recent tracks.
 3. labwc autostart (`pi/labwc/autostart`) launches Chromium in kiosk mode on `http://nowplaying.local`.
-4. `hyperpixel-mqtt.service` runs `pi/hyperpixel_mqtt_control_final.py`, which subscribes to
-   MQTT topic `nowplaying/backlight` on the broker at 192.168.0.4:1883 to switch the display backlight.
+4. `hyperpixel-mqtt.service` runs `pi/hyperpixel_mqtt_control_final.py`, which switches the display
+   backlight on MQTT `nowplaying/backlight` messages. See "Screen power control" below.
+
+## Screen power control (presence + playing)
+
+The screen is meant to be on only when someone is in the room **and** music is playing.
+The decision is made by **Home Assistant**, not by anything on this Pi.
+
+**Verified (read from the Pi):**
+
+- Home Assistant OS runs at `192.168.0.4`, and the MQTT broker is on the same host (port 1883, username/password auth).
+- `hyperpixel-mqtt.service` runs `pi/hyperpixel_mqtt_control_final.py` as user `pi`. It subscribes to
+  topic **`nowplaying/backlight`** and accepts payload `on` or `off` (case-insensitive; anything else is ignored).
+- On `on`/`off` it writes `1`/`0` to `/sys/class/backlight/backlight/brightness` using `sudo tee`
+  (works because `pi` has passwordless sudo).
+- Only the **backlight** is switched. Chromium keeps running, so the page stays loaded and updates
+  while the screen is dark.
+
+**Not verified (inferred, Home Assistant config was not read):**
+
+- Something in Home Assistant (presumably an automation) publishes `on`/`off` to `nowplaying/backlight`
+  when the room's presence sensor and the Spotify/media player state change. Which sensor and which
+  media player entity it uses is not recorded here.
+- To find it: in Home Assistant, Settings > Automations, look for an automation with an MQTT publish
+  action on `nowplaying/backlight`. Once found, add the entity names and conditions to this section.
+
+Manual test, from any machine with `mosquitto_pub`:
+
+```bash
+mosquitto_pub -h 192.168.0.4 -u <user> -P <password> -t nowplaying/backlight -m off   # or: on
+```
 
 ## Changes from upstream
 
