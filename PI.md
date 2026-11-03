@@ -3,7 +3,7 @@
 Fork of [jasontate/raspberry-pi-now-playing](https://github.com/jasontate/raspberry-pi-now-playing)
 (Last.fm "now playing" page, shown full-screen on a small square display).
 Upstream is the `upstream` remote; this fork is `origin`. The Pi was originally set up
-by cloning upstream into `/var/www/html` and deleting `.git`, so the Pi itself is not a git checkout.
+by cloning upstream into `/var/www/html` and deleting `.git`; it has since been re-initialised as a checkout of this fork.
 
 ## Device
 
@@ -29,16 +29,16 @@ by cloning upstream into `/var/www/html` and deleting `.git`, so the Pi itself i
 
 ## Changes from upstream
 
-- `index.php`: CSS rule hiding the mouse cursor; Last.fm key/user set on the Pi (placeholders here).
+- `index.php`: CSS rule hiding the mouse cursor; Last.fm key/user loaded from `config.local.php` instead of hardcoded.
 - `style.min.css`: `cursor:none` on `body`.
 - Extra Pi files under `pi/` (not part of upstream).
 
 ## Secrets (not in git)
 
-- `LASTFM_API_KEY` / `LASTFM_USER` in `/var/www/html/index.php` on the Pi.
+- `LASTFM_API_KEY` / `LASTFM_USER` in `/var/www/html/config.local.php` on the Pi (gitignored; template in `config.local.php.example`).
 - `MQTT_USERNAME` / `MQTT_PASSWORD` in `/home/pi/hyperpixel_mqtt_control_final.py` on the Pi.
 
-Repo copies hold placeholders. Don't overwrite the Pi files blindly: fill the values in after deploying.
+The repo holds placeholders only. `/var/www/html` on the Pi is a git checkout of this fork, so deploying is `cd /var/www/html && git pull`.
 
 ## Deploy / file map
 

@@ -2,8 +2,8 @@
 session_start();
 
 // Constants
-define('LASTFM_API_KEY', 'yourapikey');
-define('LASTFM_USER', 'yourusername');
+// Defines LASTFM_API_KEY and LASTFM_USER (see config.local.php.example)
+require __DIR__ . '/config.local.php';
 define('CACHE_DURATION', 300); // 5 minutes
 
 // Helper functions

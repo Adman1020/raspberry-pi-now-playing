@@ -1,0 +1,4 @@
+<?php
+// Copy to config.local.php (gitignored) and fill in.
+define('LASTFM_API_KEY', 'yourapikey');
+define('LASTFM_USER', 'yourusername');
