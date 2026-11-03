@@ -86,6 +86,10 @@ $topAlbums = getCachedData('top_albums', function () use ($topAlbumsEndpoint) {
 	<link rel="stylesheet" href="/static/css/normalize.min.css">
 	<link rel="stylesheet" href="style.min.css?v1">
 	<style>
+		/* This is the best place to force no cursor for the entire page */
+		*, *::before, *::after {
+			cursor: none !important;
+		}
 		.artwork { background-image: url("<?php echo $trackInfo['albumArt']; ?>"); }
 	</style>
 	<script>

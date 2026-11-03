@@ -1,0 +1,17 @@
+[Unit]
+Description=Hyperpixel MQTT Backlight Control
+After=network.target
+After=mosquitto.service 
+
+[Service]
+Type=simple
+User=pi 
+WorkingDirectory=/home/pi/
+ExecStart=/usr/bin/env python3 /home/pi/hyperpixel_mqtt_control_final.py
+Restart=always
+RestartSec=5s 
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target
